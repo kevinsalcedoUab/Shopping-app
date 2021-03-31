@@ -1,8 +1,9 @@
 //Product Constructor
 class Product {
-  constructor(name, price) {
+  constructor(name, price, year) {
     this.name = name;
     this.price = price;
+    this.year = year;
   }
 }
 
@@ -16,7 +17,8 @@ class UI {
       <div class="card text-center mb-4">
         <div class="card-body">
           <h5><strong>${product.name}</strong></h5>
-          <strong >Price</strong>: ${product.price}€ 
+          <strong >Price</strong>: ${product.price}€
+          <strong >Year</strong>: ${product.year}
           <a href="#" class="btn btn-danger ml-5" name="delete">Delete</a>
         </div>
       </div>
@@ -28,10 +30,14 @@ class UI {
     document.getElementById("product-form").reset();
   }
 
-  static deleteProduct(element) {
+  static deleteProduct(element, event) {
     console.log("element", element)
-    element.parentElement.parentElement.remove();
-    return true;
+
+    if(element.name=="delete"){
+      event.stopPropagation();
+      element.parentElement.parentElement.remove();
+      return true;
+    }
   }
 
   static showMessage(message, cssClass) {
@@ -57,10 +63,10 @@ class UI {
 document.getElementById("product-form").addEventListener("submit", e => {
   const name = document.getElementById("product-name").value
     price = document.getElementById("product-price").value
-
+    year = document.getElementById("product-year").value
 
   //Create a new Object Product
-  const product = new Product(name, price);
+  const product = new Product(name, price, year);
 
 
   //Save product
@@ -73,8 +79,8 @@ document.getElementById("product-form").addEventListener("submit", e => {
 
 //Delete product
 document.getElementById("product-list").addEventListener("click", e => {
-  UI.deleteProduct(e.target);
-  if (UI.deleteProduct(e.target)) {
+  //UI.deleteProduct(e.target, e);
+  if (UI.deleteProduct(e.target, e)) {
     UI.showMessage("Product removed successfully", "danger");
   }
   e.preventDefault();
